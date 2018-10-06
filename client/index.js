@@ -7,8 +7,8 @@ const card = post => {
                     <p style="white-space: pre-line">
                         ${post.text}
                     </p>
-                    <time datetime="${post.date}">
-                        ${post.date}
+                    <time datetime="${new Date(post.date).toLocaleDateString()}">
+                        ${new Date(post.date).toLocaleDateString()}
                     </time>
                 </div>
                 <div class="card-action">

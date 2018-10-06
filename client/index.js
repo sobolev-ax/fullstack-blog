@@ -4,7 +4,7 @@ const card = post => {
                     <span class="card-title">
                         ${post.title}
                     </span>
-                    <p>
+                    <p style="white-space: pre-line">
                         ${post.text}
                     </p>
                     <time datetime="${post.date}">

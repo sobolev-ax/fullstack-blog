@@ -23,10 +23,22 @@ const card = post => {
 
 const BASE_URL = 'api/post';
 let posts = [];
+let modal;
+const modalId = '#createPostModal';
 
 class PostApi {
     static fetch() {
         return fetch(BASE_URL, {method: 'get'}).then(res => res.json());
+    }
+    static create(post) {
+        return fetch(BASE_URL, {
+            method: 'post',
+            body: JSON.stringify(post),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
     }
 }
 
@@ -36,6 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         renderPosts(posts);
     })
+
+    modal = M.Modal.init(document.querySelector(modalId));
+})
+
+document.addEventListener('click', (e) => {
+    const $node = e.target;
+    if ($node.hasAttribute('id') && $node.getAttribute('id') ===  'createPost') {
+        onCreatePost();
+    }
 })
 
 function renderPosts(_posts = []) {
@@ -49,4 +70,26 @@ function renderPosts(_posts = []) {
     }
 
     $posts.innerHTML = html;
+}
+
+function onCreatePost() {
+    const $title = document.querySelector('#title');
+    const $text = document.querySelector('#text');
+
+    if (!$title.value && !$text.value) return;
+    const newPost = {
+        'title': $title.value,
+        'text': $text.value
+    }
+
+    PostApi.create(newPost).then(post => {
+        posts.push(post);
+        renderPosts(posts);
+
+        modal.close();
+        $title.value = '';
+        $text.value = '';
+
+        M.updateTextFields();
+    })
 }
